@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="aN1yFb" name="PFMProject0" projectType="audioplug" jucerVersion="5.4.7">
+<JUCERPROJECT id="aN1yFb" name="PFMProject0" projectType="audioplug" jucerVersion="5.4.7"
+              pluginCharacteristicsValue="pluginIsSynth" pluginManufacturerCode="Lvw">
   <MAINGROUP id="FxfCOA" name="PFMProject0">
     <GROUP id="{173392D3-E576-9447-3811-58056DF37CC7}" name="Source">
       <FILE id="nDSarh" name="PluginProcessor.cpp" compile="1" resource="0"
@@ -26,13 +27,11 @@
         <MODULEPATH id="juce_audio_processors" path="../../../../Programming/JUCE/modules"/>
         <MODULEPATH id="juce_audio_utils" path="../../../../Programming/JUCE/modules"/>
         <MODULEPATH id="juce_core" path="../../../../Programming/JUCE/modules"/>
-        <MODULEPATH id="juce_cryptography" path="../../../../Programming/JUCE/modules"/>
         <MODULEPATH id="juce_data_structures" path="../../../../Programming/JUCE/modules"/>
         <MODULEPATH id="juce_events" path="../../../../Programming/JUCE/modules"/>
         <MODULEPATH id="juce_graphics" path="../../../../Programming/JUCE/modules"/>
         <MODULEPATH id="juce_gui_basics" path="../../../../Programming/JUCE/modules"/>
         <MODULEPATH id="juce_gui_extra" path="../../../../Programming/JUCE/modules"/>
-        <MODULEPATH id="juce_opengl" path="../../../../Programming/JUCE/modules"/>
       </MODULEPATHS>
     </XCODE_MAC>
   </EXPORTFORMATS>
@@ -45,13 +44,11 @@
     <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
-    <MODULE id="juce_cryptography" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
-    <MODULE id="juce_opengl" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
   </MODULES>
   <LIVE_SETTINGS>
     <OSX/>
