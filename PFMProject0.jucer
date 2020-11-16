@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="aN1yFb" name="PFMProject0" projectType="audioplug" jucerVersion="5.4.7"
-              pluginCharacteristicsValue="pluginIsSynth" pluginManufacturerCode="Lvw">
+<JUCERPROJECT id="aN1yFb" name="PFMProject0" projectType="audioplug" pluginCharacteristicsValue="pluginIsSynth"
+              pluginManufacturerCode="Lvw" jucerFormatVersion="1">
   <MAINGROUP id="FxfCOA" name="PFMProject0">
     <GROUP id="{173392D3-E576-9447-3811-58056DF37CC7}" name="Source">
       <FILE id="nDSarh" name="PluginProcessor.cpp" compile="1" resource="0"
@@ -12,6 +12,7 @@
             file="Source/PluginEditor.cpp"/>
       <FILE id="lbeR4R" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
     </GROUP>
+    <FILE id="mU5N4k" name="test.h" compile="0" resource="0" file="/Programming/PFMProject0/Source/test.h"/>
   </MAINGROUP>
   <EXPORTFORMATS>
     <XCODE_MAC targetFolder="Builds/MacOSX">

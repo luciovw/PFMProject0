@@ -8,9 +8,28 @@
   ==============================================================================
 */
 
+/*
+ TO DO:
+ click anywhere on the window and play a note
+ if you click and drag it will change the pitch of a note.
+ Should we play a sound?
+ */
+
 #pragma once
 
 #include <JuceHeader.h>
+//==============================================================================
+#include<array>
+struct BufferAnalyzer
+{
+    void prepare(double sampleRate, int samplesPerBlock);
+    void cloneBuffer ( const AudioBuffer<float>& other);
+    
+private:
+    std::array<AudioBuffer<float>, 2> buffers;
+    Atomic<bool> firstBuffer {true};
+    
+};
 
 //==============================================================================
 /**
@@ -54,8 +73,16 @@ public:
     //==============================================================================
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
-
+    AudioParameterBool* shouldPlaySound = nullptr; // = false;
+    
+    AudioParameterFloat* bgColor = nullptr;
+    
+    static void UpdateAutomatableParameter(RangedAudioParameter*, float value);
+    
 private:
+    AudioProcessorValueTreeState apvts;
+    Random r;
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Pfmproject0AudioProcessor)
 };
