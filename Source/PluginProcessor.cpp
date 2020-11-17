@@ -58,21 +58,25 @@ void BufferAnalyzer::run()
 {
     while (true)
     {
-    wait(-1);
-    
-        DBG( "BufferAnalyzer::run() awake! ");
-    
-    if ( threadShouldExit() )
-        break;
+        wait(-1);
         
-    auto index = !firstBuffer.get();
+            DBG( "BufferAnalyzer::run() awake! ");
+        
+        if ( threadShouldExit() )
+            break;
+        
+        auto index = !firstBuffer.get();
+        
+        auto* readPointer = buffers[index].getReadPointer(0);
+        
         for (int i = 0; i < samplesCopied[index]; ++i)
         {
-        pushNextSampleIntoFifo(buffers[index].getSample(0,i));
+        //pushNextSampleIntoFifo(buffers[index].getSample(0,i));
             /*
              getSample is SLOW
              try using a pointer
              */
+            pushNextSampleIntoFifo(*(readPointer + i));
         }
     }
 }
