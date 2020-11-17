@@ -23,11 +23,13 @@
 struct BufferAnalyzer
 {
     void prepare(double sampleRate, int samplesPerBlock);
-    void cloneBuffer ( const AudioBuffer<float>& other);
+    void cloneBuffer ( const dsp::AudioBlock<float>& other);
     
 private:
     std::array<AudioBuffer<float>, 2> buffers;
     Atomic<bool> firstBuffer {true};
+    
+    std::array<size_t, 2> samplesCopied;
     
 };
 
@@ -83,6 +85,8 @@ private:
     AudioProcessorValueTreeState apvts;
     Random r;
 
+    BufferAnalyzer leftBufferAnalyzer, rightBufferAnalyzer;
+    
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Pfmproject0AudioProcessor)
 };

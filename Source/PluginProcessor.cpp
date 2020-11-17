@@ -12,6 +12,34 @@
 #include "PluginEditor.h"
 
 //==============================================================================
+void BufferAnalyzer::prepare(double sampleRate, int samplesPerBlock)
+{
+    firstBuffer = true;
+    buffers[0].setSize(1, samplesPerBlock);
+    buffers[1].setSize(1, samplesPerBlock);
+    
+    samplesCopied[0] = 0;
+    samplesCopied[1] = 0;
+}
+
+void BufferAnalyzer::cloneBuffer(const dsp::AudioBlock<float>& other)
+{
+    auto whichIndex = firstBuffer.get();
+    auto index = whichIndex ? 0 : 1;
+    firstBuffer.set(!whichIndex);
+
+    jassert(other.getNumChannels() == buffers[index].getNumChannels() );
+    jassert(other.getNumSamples() <= buffers[index].getNumSamples() );
+
+    buffers[index].clear();
+    
+    dsp::AudioBlock<float> buffer(buffers[index]);
+    buffer.copyFrom(other);
+    
+    samplesCopied[index] = other.getNumSamples();
+}
+
+//==============================================================================
 Pfmproject0AudioProcessor::Pfmproject0AudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
      : AudioProcessor (BusesProperties()
@@ -113,6 +141,8 @@ void Pfmproject0AudioProcessor::prepareToPlay (double sampleRate, int samplesPer
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
+    leftBufferAnalyzer.prepare( sampleRate,  samplesPerBlock);
+    rightBufferAnalyzer.prepare( sampleRate,  samplesPerBlock);
 }
 
 void Pfmproject0AudioProcessor::releaseResources()
@@ -182,6 +212,19 @@ void Pfmproject0AudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBu
             }
         }
     }
+    //BufferAnalyzer.cloneBuffer(buffer);
+    
+    dsp::AudioBlock<float>block(buffer);
+    auto left = block.getSingleChannelBlock(0);
+    leftBufferAnalyzer.cloneBuffer(left);
+    
+    if (buffer.getNumChannels() == 2)
+    {
+        auto right = block.getSingleChannelBlock(1);
+        rightBufferAnalyzer.cloneBuffer(right);
+    }
+    
+    buffer.clear();
 }
 
 //==============================================================================
