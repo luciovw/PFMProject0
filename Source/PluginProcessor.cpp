@@ -12,6 +12,14 @@
 
 //==============================================================================
 
+BufferAnalyzer::BufferAnalyzer() : Thread("BufferAnalyzer")
+{
+    startThread();
+    startTimerHz(20);
+    
+    fftCurve.preallocateSpace(3 * numPoints);
+}
+
 BufferAnalyzer::~BufferAnalyzer()
 {
     notify();
@@ -24,8 +32,8 @@ void BufferAnalyzer::prepare(double sampleRate, int samplesPerBlock)
     buffers[0].setSize(1, samplesPerBlock);
     buffers[1].setSize(1, samplesPerBlock);
     
-    samplesCopied[0] = 0;
-    samplesCopied[1] = 0;
+    samplesCopied[0].set( 0 );
+    samplesCopied[1].set( 0 );
     
     fifoIndex = 0;
     
@@ -49,7 +57,7 @@ void BufferAnalyzer::cloneBuffer(const dsp::AudioBlock<float>& other)
     dsp::AudioBlock<float> buffer(buffers[index]);
     buffer.copyFrom(other);
     
-    samplesCopied[index] = other.getNumSamples();
+    samplesCopied[index].set( other.getNumSamples() );
     
     notify();
 }
@@ -67,9 +75,11 @@ void BufferAnalyzer::run()
         
         auto index = !firstBuffer.get();
         
+        auto numSamples = samplesCopied[index].get();
+        
         auto* readPointer = buffers[index].getReadPointer(0);
         
-        for (int i = 0; i < samplesCopied[index]; ++i)
+        for (int i = 0; i < numSamples; ++i)
         {
         //pushNextSampleIntoFifo(buffers[index].getSample(0,i));
             /*
@@ -87,11 +97,12 @@ void BufferAnalyzer::pushNextSampleIntoFifo (float sample)
     // that the next frame should now be rendered..
     if (fifoIndex == fftSize)               // [11]
     {
-        if (nextFFTBlockReady == false)
+        auto ready = nextFFTBlockReady.get();
+        if (!ready)
         {
             zeromem(fftData, sizeof(fftData));
             memcpy(fftData, fifoBuffer, sizeof(fifoBuffer));
-            nextFFTBlockReady = true;
+            nextFFTBlockReady.set(true);
         }
         fifoIndex = 0;
     }
@@ -101,10 +112,11 @@ void BufferAnalyzer::pushNextSampleIntoFifo (float sample)
 
 void BufferAnalyzer::timerCallback()
 {
-    if (nextFFTBlockReady)
+    auto ready = nextFFTBlockReady.get();
+    if (ready)
     {
         drawNextFrameOfSpectrum();
-        nextFFTBlockReady = false;
+        nextFFTBlockReady.set(false) ;
         repaint();
     }
 }
@@ -137,7 +149,8 @@ void BufferAnalyzer::paint(Graphics& g)
     float w = getWidth();
     float h = getHeight();
     
-    Path fftCurve;
+    fftCurve.clear();
+    
     fftCurve.startNewSubPath(0, jmap(curveData[0],
                                      0.f,
                                      1.f,
@@ -162,7 +175,32 @@ void BufferAnalyzer::paint(Graphics& g)
     }
     
     g.fillAll(Colours::black);
-    g.setColour(Colours::white);
+    
+    //g.setColour(Colours::white);
+    ColourGradient cg;
+    
+    //white red orange yellow green blue violet
+    auto colors = std::vector<Colour>
+    {
+        //divided in 1/7's
+        Colours::violet,
+        Colours::yellow,
+        Colours::green,
+        Colours::blue,
+        Colours::orange,
+        Colours::red,
+        Colours::white,
+    };
+    
+    for ( int i = 0; i < colors.size(); ++i)
+    {
+        cg.addColour(double(i) / double(colors.size() - 1), colors[i]);
+    }
+    
+    cg.point1 = {0, h};
+    cg.point2 = {0, 0};
+    
+    g.setGradientFill(cg);
     g.strokePath(fftCurve, PathStrokeType(1) );
     
     
