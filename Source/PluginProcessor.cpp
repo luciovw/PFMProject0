@@ -68,7 +68,7 @@ void BufferAnalyzer::run()
     {
         wait(-1);
         
-            DBG( "BufferAnalyzer::run() awake! ");
+            //DBG( "BufferAnalyzer::run() awake! ");
         
         if ( threadShouldExit() )
             break;
